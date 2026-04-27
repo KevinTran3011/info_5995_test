@@ -1,0 +1,26 @@
+name: Deploy plugin assets/readme to WordPress.org
+
+on:
+  push:
+    branches:
+    - stable
+
+permissions: read-all
+
+jobs:
+  deploy:
+    name: Deploy updates
+    runs-on: ubuntu-latest
+    environment: wp.org plugin
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v6
+
+      - name: WordPress.org plugin assets/readme update
+        uses: 10up/action-wordpress-plugin-asset-update@2480306f6f693672726d08b5917ea114cb2825f7
+        env:
+          SVN_USERNAME: ${{ secrets.WORDPRESSORG_SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.WORDPRESSORG_SVN_PASSWORD }}
+          IGNORE_OTHER_FILES: true
+          SLUG: glotpress

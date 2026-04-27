@@ -1,0 +1,40 @@
+{
+  "name": "glotpress/glotpress-wp",
+  "description": "GlotPress is a collaborative, web-based software translation tool.",
+  "license": "GPL-2.0-or-later",
+  "type": "wordpress-plugin",
+  "keywords": [
+    "translations",
+    "wordpress",
+    "i18n"
+  ],
+  "homepage": "https://glotpress.blog/",
+  "support": {
+    "issues": "https://github.com/GlotPress/GlotPress/issues",
+    "forum": "https://wordpress.org/support/plugin/glotpress/",
+    "source": "https://github.com/GlotPress/GlotPress",
+    "docs": "https://glotpress.blog/the-manual/"
+  },
+  "require": {
+    "php": ">=7.4"
+  },
+  "require-dev": {
+    "dealerdirect/phpcodesniffer-composer-installer": "^1.0.0",
+    "gettext/languages": "^2.6",
+    "phpcompatibility/phpcompatibility-wp": "^2.1",
+    "phpunit/phpunit": "^9.6.15",
+    "wp-coding-standards/wpcs": "^3.2",
+    "yoast/phpunit-polyfills": "^4.0"
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
+  },
+  "scripts": {
+    "format": "@php ./vendor/bin/phpcbf --report=summary,source",
+    "lint": "@php ./vendor/bin/phpcs --report=summary,source",
+    "test": "@php ./vendor/bin/phpunit",
+    "test:locales": "@test --group locales"
+  }
+}

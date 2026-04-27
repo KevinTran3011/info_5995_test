@@ -1,0 +1,50 @@
+name: Boundary PoC Tests
+
+on:
+  workflow_dispatch:
+
+permissions: read-all
+
+jobs:
+  boundary-poc:
+    name: GlotPress bulk boundary PoC
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:5.7
+        ports:
+          - 3306/tcp
+        env:
+          MYSQL_ROOT_PASSWORD: password
+        options: >-
+          --health-cmd "mysqladmin ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 3
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          coverage: none
+          tools: composer
+
+      - name: Install SVN
+        run: sudo apt-get update && sudo apt-get install -y subversion
+
+      - name: Install Composer dependencies
+        uses: ramsey/composer-install@v3
+        with:
+          composer-options: "--no-progress --no-ansi --no-interaction"
+
+      - name: Install WordPress test setup
+        run: bash bin/install-wp-tests.sh wordpress_test root password 127.0.0.1:${{ job.services.mysql.ports[3306] }} latest
+
+      - name: Run boundary PoC tests
+        run: vendor/bin/phpunit --filter GP_Test_Route_Translation_Bulk_Boundaries
+
