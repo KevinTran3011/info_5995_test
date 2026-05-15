@@ -26,9 +26,12 @@ async function main() {
     waitUntil: "networkidle",
   });
   await page.getByRole("button", { name: "Run real GlotPress PoC with dummy data" }).click();
-  await page.locator("#log").getByText("A-scoped user modified B-scoped objects", { exact: false }).waitFor({
-    timeout: 45000,
-  });
+  await page.waitForTimeout(8000);
+  const logText = await page.locator("#log").innerText();
+  console.log(logText);
+  if (!logText.includes('"translation_changed": true') || !logText.includes('"priority_changed": true')) {
+    throw new Error("PoC result did not show both unauthorized cross-scope changes.");
+  }
   await page.waitForTimeout(2500);
 
   const video = page.video();
