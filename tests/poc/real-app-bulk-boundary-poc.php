@@ -9,7 +9,7 @@
 
 if ( isset( $_GET['mode'] ) && 'run' === $_GET['mode'] ) {
 	header( 'Content-Type: application/json; charset=utf-8' );
-	echo wp_json_encode( gp_poc_run_real_route() );
+	echo json_encode( gp_poc_run_real_route(), JSON_PRETTY_PRINT );
 	exit;
 }
 
