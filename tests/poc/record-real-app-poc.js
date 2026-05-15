@@ -19,12 +19,15 @@ async function main() {
   });
 
   const page = await context.newPage();
+  page.on("console", (message) => console.log(`browser console ${message.type()}: ${message.text()}`));
+  page.on("pageerror", (error) => console.log(`browser pageerror: ${error.message}`));
+
   await page.goto("http://127.0.0.1:8899/real-app-bulk-boundary-poc.php", {
     waitUntil: "networkidle",
   });
   await page.getByRole("button", { name: "Run real GlotPress PoC with dummy data" }).click();
-  await page.getByText("PoC completed against real GlotPress route").waitFor({
-    timeout: 30000,
+  await page.locator("#log").getByText("A-scoped user modified B-scoped objects", { exact: false }).waitFor({
+    timeout: 45000,
   });
   await page.waitForTimeout(2500);
 

@@ -9,7 +9,7 @@
 
 if ( isset( $_GET['mode'] ) && 'run' === $_GET['mode'] ) {
 	header( 'Content-Type: application/json; charset=utf-8' );
-	echo json_encode( gp_poc_run_real_route(), JSON_PRETTY_PRINT );
+	echo json_encode( gp_poc_run_real_route(), JSON_PRETTY_PRINT | JSON_INVALID_UTF8_SUBSTITUTE );
 	exit;
 }
 
@@ -362,7 +362,22 @@ function gp_poc_run_real_route() {
       log.textContent = "Bootstrapping WordPress tests and loading real GlotPress plugin code...";
 
       const response = await fetch("?mode=run", { cache: "no-store" });
-      const result = await response.json();
+      const text = await response.text();
+      let result;
+
+      try {
+        result = JSON.parse(text);
+      } catch (error) {
+        log.textContent = `PoC request returned a non-JSON response.\n\n${error}\n\nRaw response:\n${text}`;
+        run.disabled = false;
+        return;
+      }
+
+      if (!response.ok || !result.after || !result.before) {
+        log.textContent = `PoC request failed or returned an incomplete response.\n\n${text}`;
+        run.disabled = false;
+        return;
+      }
 
       translationState.textContent = `${result.before.translation_b_status} -> ${result.after.translation_b_status}`;
       priorityState.textContent = `${result.before.original_b_priority} -> ${result.after.original_b_priority}`;
