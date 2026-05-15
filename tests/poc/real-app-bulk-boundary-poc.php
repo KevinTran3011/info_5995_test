@@ -16,6 +16,7 @@ if ( isset( $_GET['mode'] ) && 'run' === $_GET['mode'] ) {
 function gp_poc_run_real_route() {
 	ob_start();
 
+	require_once dirname( __DIR__, 2 ) . '/vendor/autoload.php';
 	require_once dirname( __DIR__ ) . '/phpunit/bootstrap.php';
 
 	$factory = new GP_UnitTest_Factory();
