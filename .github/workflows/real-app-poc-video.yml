@@ -68,7 +68,7 @@ jobs:
         run: node tests/poc/record-real-app-poc.js
 
       - name: Upload PoC video and server log
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         if: always()
         with:
           name: glotpress-real-app-dummy-data-poc
